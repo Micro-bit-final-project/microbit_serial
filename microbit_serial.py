@@ -9,6 +9,7 @@ def connect():
     """
     Retrieve and return microbit's serial port.
     Returns false if no microbit is found.
+    Heavily based on https://stackoverflow.com/questions/58043143/how-to-set-up-serial-communication-with-microbit-using-pyserial
     """
     microbit_port = serial.Serial(baudrate=115200, timeout=0.1) # microbit's baudrate
     ports = list(list_ports.comports())
@@ -21,3 +22,29 @@ def connect():
             continue
 
     return False # No microbit found
+
+
+def data(port):
+    """
+    This function reads the message coming in through serial from the microbit.
+    port - a serial.Serial object rappresenting the port used for the 
+           connection with the microbit.
+    """
+    message = port.readline().decode("utf-8")
+    if message:
+        try:
+            message = message.replace('\r', '')  # Remove carriage return
+            message = message.replace('\n', '')  # Remove line feed
+            message = message[1:-1]  # Remove array parenthesis []
+
+            # Convert string message to float array
+            message = message.split(",")
+            data = []
+            for item in message:
+                data.append(float(item))
+            return data
+        except UnicodeDecodeError:
+            print("Invalid message")
+        except ValueError:
+            print("Invalid message")
+    return False
