@@ -30,7 +30,10 @@ def data(port):
     port - a serial.Serial object rappresenting the port used for the 
            connection with the microbit.
     """
-    message = port.readline().decode("utf-8")
+    try:
+        message = port.readline().decode("utf-8")
+    except Exception:
+        return [-1, -1, -1, -1]
     if message:
         try:
             message = message.replace('\r', '')  # Remove carriage return
