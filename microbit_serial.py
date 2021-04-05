@@ -48,6 +48,8 @@ def data(port):
             return data
         except UnicodeDecodeError:
             print("Invalid message")
+            return [0, 0, 0, 0]
         except ValueError:
             print("Invalid message")
+            return [0, 0, 0, 0]
     return False
